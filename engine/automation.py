@@ -1,6 +1,5 @@
 import RPi.GPIO as GPIO # Import the GPIO Library
 import time # Import the Time library
-
 # Set the GPIO modes
 GPIO.setmode(GPIO.BCM)
 GPIO.setwarnings(False)
@@ -9,15 +8,16 @@ pinMotorAForwards = 10
 pinMotorABackwards = 9
 pinMotorBForwards = 8
 pinMotorBBackwards = 7
+# Define GPIO pins to use on the Pi
 pinTrigger = 17
 pinEcho = 18
+pinLineFollower = 25
 pinLamp = 21
 # How many times to turn the pin on and off each second
-Frequency = 50
-# How long the pin stays on each cycle, as a percent (here, it's 30%)
-DutyCycleA = 30 #float(input("set dutycycle for a: "))
-DutyCycleB = 30 #float(input("set dutycycle for b: "))
-#time1 = float(input("set time to ride"))
+Frequency = 20
+# How long the pin stays on each cycle, as a percent
+DutyCycleA = 30
+DutyCycleB = 30
 # Setting the duty cycle to 0 means the motors will not turn
 Stop = 0
 # Set the GPIO Pin mode to be Output
@@ -25,10 +25,17 @@ GPIO.setup(pinMotorAForwards, GPIO.OUT)
 GPIO.setup(pinMotorABackwards, GPIO.OUT)
 GPIO.setup(pinMotorBForwards, GPIO.OUT)
 GPIO.setup(pinMotorBBackwards, GPIO.OUT)
+GPIO.setup(pinLamp, GPIO.OUT)
+GPIO.setup(pinLineFollower, GPIO.IN)
+
+# Set pins as output and input
 GPIO.setup(pinTrigger, GPIO.OUT) # Trigger
 GPIO.setup(pinEcho, GPIO.IN) # Echo
-GPIO.setup(pinLamp, GPIO.OUT)
 
+# Distance Variables
+HowNear = 15
+ReverseTime = 0.5
+TurnTime = 0.45
 # Set the GPIO to software PWM at 'Frequency' Hertz
 pwmMotorAForwards = GPIO.PWM(pinMotorAForwards, Frequency)
 pwmMotorABackwards = GPIO.PWM(pinMotorABackwards, Frequency)
@@ -71,37 +78,82 @@ def Right():
 	pwmMotorBForwards.ChangeDutyCycle(Stop)
 	pwmMotorBBackwards.ChangeDutyCycle(DutyCycleB)
 
-time.sleep(10)	
-try:
-	while True:
-		GPIO.output(pinTrigger, False)
-		time.sleep(0.5)
-		GPIO.output(pinTrigger, True)
-		time.sleep(0.00001)
-		GPIO.output(pinTrigger, False)
+
+# Return True if the ultrasonic sensor sees an obstacle
+def IsNearObstacle(localHowNear):
+	Distance = Measure()
+	print("IsNearObstacle: "+str(Distance))
+	if Distance < localHowNear:
+		return True
+	else:
+		return False
+# Take a distance measurement
+def Measure():
+	GPIO.output(pinTrigger, True)
+	time.sleep(0.00001)
+	GPIO.output(pinTrigger, False)
+	StartTime = time.time()
+	StopTime = StartTime
+	while GPIO.input(pinEcho)==0:
 		StartTime = time.time()
-		
-		while GPIO.input(pinEcho)==0:
-			StartTime = time.time()
-		
-		while GPIO.input(pinEcho)==1:
-			StopTime = time.time()
-			if StopTime-StartTime >= 0.04:
-				print("Hold on there! You're too close for me to see.")
-				StopTime = StartTime
-				break
-		ElapsedTime = StopTime - StartTime
-		Distance = ElapsedTime * 34326
-		Distance = Distance / 2
-		
-		if(Distance > 10):
-			Forwards()
-		else:
-			StopMotors()
-			GPIO.output(pinLamp, GPIO.HIGH)
-			time.sleep(0.2)
-			GPIO.output(pinLamp, GPIO.LOW)
-		time.sleep(0.5)
-except KeyboardInterrupt:
+		StopTime = StartTime
+	while GPIO.input(pinEcho)==1:
+		StopTime = time.time()
+# If the sensor is too close to an object, the Pi cannot
+# see the echo quickly enough, so it has to detect that
+# problem and say what has happened
+		if StopTime-StartTime >= 0.04:
+			print("Hold on there! You're too close for me to see.")
+			StopTime = StartTime
+			break
+	ElapsedTime = StopTime - StartTime
+	Distance = (ElapsedTime * 34326)/2
+	return Distance
+
+# Return True if the ultrasonic sensor sees an obstacle
+def IsNearObstacle(localHowNear):
+	Distance = Measure()
+	print("IsNearObstacle: "+str(Distance))
+	if Distance < localHowNear:
+		return True
+	else:
+		return False
+	
+# Move back a little, then turn right
+def letsgoback():
+	GPIO.output(pinLamp, GPIO.HIGH)
+	time.sleep(0.2)
+	GPIO.output(pinLamp, GPIO.LOW)
+	GPIO.output(pinLamp, GPIO.HIGH)
+	time.sleep(0.2)
+	GPIO.output(pinLamp, GPIO.LOW)
+	Backwards()
+	time.sleep(ReverseTime)
 	StopMotors()
+
+	Right()
+	time.sleep(TurnTime)
+	StopMotors()
+def AvoidObstacle():
+# Back off a little
+# Turn right
+	print("Right")
+	Right()
+	time.sleep(TurnTime)
+	StopMotors()
+try:
+# Set trigger to False (Low)
+	GPIO.output(pinTrigger, False)
+# Allow module to settle
+	time.sleep(0.1)
+#repeat the next indented block forever
+	while True:
+		Forwards()
+		time.sleep(0.1)
+		if IsNearObstacle(HowNear):
+			StopMotors()
+			AvoidObstacle()
+		if GPIO.input(pinLineFollower)!=0:
+			letsgoback()
+except KeyboardInterrupt:
 	GPIO.cleanup()
