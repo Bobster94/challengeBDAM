@@ -1,6 +1,7 @@
 import RPi.GPIO as GPIO # Import the GPIO Library
 import time # Import the Time library
 # Set the GPIO modes
+
 GPIO.setmode(GPIO.BCM)
 GPIO.setwarnings(False)
 # Set variables for the GPIO motor pins
@@ -31,8 +32,20 @@ def Backwards():
     GPIO.output(pinMotorABackwards, 1)
     GPIO.output(pinMotorBForwards, 0)
     GPIO.output(pinMotorBBackwards, 1)
-GPIO.cleanup()
+def Left():
+	GPIO.output(pinMotorAForwards, 0)
+	GPIO.output(pinMotorAB1ackwards, 1)
+	GPIO.output(pinMotorBForwards, 1)
+	GPIO.output(pinMotorBBackwards, 0)
+# Turn Right
+def Right():
+	GPIO.output(pinMotorAForwards, 1)
+	GPIO.output(pinMotorABackwards, 0)
+	GPIO.output(pinMotorBForwards, 0)
+	GPIO.output(pinMotorBBackwards, 1)
 def test():
-    Forwards()
-    time.sleep(5)
-    StopMotors()
+	Backwards()
+	time.sleep(1)
+	StopMotors()
+test()
+GPIO.cleanup()
