@@ -1,5 +1,6 @@
 import RPi.GPIO as GPIO # Import the GPIO Library
 import time # Import the Time library
+
 # Set the GPIO modes
 GPIO.setmode(GPIO.BCM)
 GPIO.setwarnings(False)
@@ -8,11 +9,14 @@ pinMotorAForwards = 10
 pinMotorABackwards = 9
 pinMotorBForwards = 8
 pinMotorBBackwards = 7
+pinTrigger = 17
+pinEcho = 18
+pinLamp = 21
 # How many times to turn the pin on and off each second
 Frequency = 50
 # How long the pin stays on each cycle, as a percent (here, it's 30%)
-DutyCycleA = float(input("set dutycycle for a"))
-DutyCycleB = float(input("set dutycycle for b"))
+DutyCycleA = float(input("set dutycycle for a: "))
+DutyCycleB = float(input("set dutycycle for b: "))
 #time1 = float(input("set time to ride"))
 # Setting the duty cycle to 0 means the motors will not turn
 Stop = 0
@@ -21,6 +25,10 @@ GPIO.setup(pinMotorAForwards, GPIO.OUT)
 GPIO.setup(pinMotorABackwards, GPIO.OUT)
 GPIO.setup(pinMotorBForwards, GPIO.OUT)
 GPIO.setup(pinMotorBBackwards, GPIO.OUT)
+GPIO.setup(pinTrigger, GPIO.OUT) # Trigger
+GPIO.setup(pinEcho, GPIO.IN) # Echo
+GPIO.setup(pinLamp, GPIO.OUT)
+
 # Set the GPIO to software PWM at 'Frequency' Hertz
 pwmMotorAForwards = GPIO.PWM(pinMotorAForwards, Frequency)
 pwmMotorABackwards = GPIO.PWM(pinMotorABackwards, Frequency)
@@ -61,12 +69,7 @@ def Right():
 	pwmMotorABackwards.ChangeDutyCycle(Stop)
 	pwmMotorBForwards.ChangeDutyCycle(Stop)
 	pwmMotorBBackwards.ChangeDutyCycle(DutyCycleB)
-
-pinTrigger = 17
-pinEcho = 18
-
-GPIO.setup(pinTrigger, GPIO.OUT) # Trigger
-GPIO.setup(pinEcho, GPIO.IN) # Echo
+	
 try:
 	while True:
 		GPIO.output(pinTrigger, False)
@@ -88,11 +91,13 @@ try:
 		ElapsedTime = StopTime - StartTime
 		Distance = ElapsedTime * 34326
 		Distance = Distance / 2
-		if(Distance > 50):
-			Forwards()
-		else:
+		if(Distance < 30 and Distance > 1):
+			GPIO.output(pinLamp, GPIO.LOW)
 			StopMotors()
-			print("Distance: %.1f cm" % Distance)
+		else:
+			GPIO.output(pinLamp, GPIO.HIGH)
+			Forwards()
+		print("Distance: %.1f cm" % Distance)
 		time.sleep(0.5)
 except KeyboardInterrupt:
 	StopMotors()
