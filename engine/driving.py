@@ -33,4 +33,6 @@ def Backwards():
     GPIO.output(pinMotorBBackwards, 1)
 GPIO.cleanup()
 def test():
-    print("hello world")
+    Forwards()
+    time.sleep(5)
+    StopMotors()
