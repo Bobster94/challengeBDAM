@@ -44,9 +44,9 @@ def turnRoundBigger():
     for x in xrange(0,50):
         x + 5
         gp.pwmMotorAF.ChangeDutyCycle(50)
-        gp.pwmMotorAB.ChangeDutyCycle()
+        gp.pwmMotorAB.ChangeDutyCycle(cfg.defaultValues['stop'])
         gp.pwmMotorBF.ChangeDutyCycle(x)
-        gp.pwmMotorBB.ChangeDutyCycle()
+        gp.pwmMotorBB.ChangeDutyCycle(cfg.defaultValues['stop'])
         if (l.isOverBlack()):
             x = 51
         else:
