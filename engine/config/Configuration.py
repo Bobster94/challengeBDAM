@@ -22,7 +22,7 @@ defaultValues = {
     
     #hoe lang de pin aan staat op elke cycle als een procent
     'dutyCycleA' : 25,
-    'dutyCycleB' : 25,
+    'dutyCycleB' : 50,
     
     #stopt de cycle
     'stop' : 0,
