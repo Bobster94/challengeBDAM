@@ -18,11 +18,11 @@ pinmap = {
 
 defaultValues = {
     #hoe vaak de pins aan en uit gaan per seconde
-    'frequency' : 20,
+    'frequency' : 50,
     
     #hoe lang de pin aan staat op elke cycle als een procent
-    'dutyCycleA' : 30,
-    'dutyCycleB' : 30,
+    'dutyCycleA' : 27.5,
+    'dutyCycleB' : 28.7,
     
     #stopt de cycle
     'stop' : 0,

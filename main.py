@@ -6,11 +6,13 @@ import time
 try:
     GPIO.output(cfg.pinmap['trigger'], False)
     time.sleep(0.1)
+    controls.stopMotors()
+    controls.driveForward()
     while True:
-        controls.driveForward()
-        time.sleep(0.1)
-        if (ultra.IsNearObstacle(cfg.defaultValues['minDistance'])):
-            controls.stopMotors()
-            controls.avoidObstacle()
+        
+        time.sleep(1)
+        #if (ultra.IsNearObstacle(cfg.defaultValues['minDistance'])):
+        #    controls.stopMotors()
+        #    controls.avoidObstacle()
 except KeyboardInterrupt:
     controls.stopEngine()

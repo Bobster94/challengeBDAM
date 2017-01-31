@@ -2,7 +2,6 @@ import RPi.GPIO as GPIO
 import engine.config.Configuration as cfg
 import util.logger as log
 
-
 GPIO.setmode(GPIO.BCM)
 GPIO.setwarnings(False)
 
@@ -27,3 +26,5 @@ log.logger.info("finalized initializing GPIO")
 
 def clear():
     GPIO.cleanup()
+    
+#controls.driveForward()

@@ -13,10 +13,10 @@ pinTrigger = 17
 pinEcho = 18
 pinLamp = 21
 # How many times to turn the pin on and off each second
-Frequency = 50
+Frequency =  75
 # How long the pin stays on each cycle, as a percent (here, it's 30%)
-DutyCycleA = 30 #float(input("set dutycycle for a: "))
-DutyCycleB = 30 #float(input("set dutycycle for b: "))
+DutyCycleA = 50 #27.5 #19.5 #float(input("set dutycycle for a: "))
+DutyCycleB = 50 #28.7 #21.8 #float(input("set dutycycle for b: "))
 #time1 = float(input("set time to ride"))
 # Setting the duty cycle to 0 means the motors will not turn
 Stop = 0
@@ -71,7 +71,6 @@ def Right():
 	pwmMotorBForwards.ChangeDutyCycle(Stop)
 	pwmMotorBBackwards.ChangeDutyCycle(DutyCycleB)
 
-time.sleep(10)	
 try:
 	while True:
 		GPIO.output(pinTrigger, False)
@@ -98,9 +97,9 @@ try:
 			Forwards()
 		else:
 			StopMotors()
-			GPIO.output(pinLamp, GPIO.HIGH)
-			time.sleep(0.2)
-			GPIO.output(pinLamp, GPIO.LOW)
+		#	GPIO.output(pinLamp, GPIO.HIGH)
+		#	time.sleep(0.2)
+		#	GPIO.output(pinLamp, GPIO.LOW)
 		time.sleep(0.5)
 except KeyboardInterrupt:
 	StopMotors()

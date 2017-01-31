@@ -14,10 +14,10 @@ pinEcho = 18
 pinLineFollower = 25
 pinLamp = 21
 # How many times to turn the pin on and off each second
-Frequency = 20
+Frequency = 75
 # How long the pin stays on each cycle, as a percent
-DutyCycleA = 30
-DutyCycleB = 30
+DutyCycleA = 50
+DutyCycleB = 50
 # Setting the duty cycle to 0 means the motors will not turn
 Stop = 0
 # Set the GPIO Pin mode to be Output
@@ -33,9 +33,10 @@ GPIO.setup(pinTrigger, GPIO.OUT) # Trigger
 GPIO.setup(pinEcho, GPIO.IN) # Echo
 
 # Distance Variables
-HowNear = 15
-ReverseTime = 0.5
-TurnTime = 0.45
+HowNear = 25
+ReverseTime = 0.4
+TurnTimeBlack = 0.16
+TurnTimeWhite = 0.2
 # Set the GPIO to software PWM at 'Frequency' Hertz
 pwmMotorAForwards = GPIO.PWM(pinMotorAForwards, Frequency)
 pwmMotorABackwards = GPIO.PWM(pinMotorABackwards, Frequency)
@@ -108,6 +109,7 @@ def Measure():
 			break
 	ElapsedTime = StopTime - StartTime
 	Distance = (ElapsedTime * 34326)/2
+	print(Distance)
 	return Distance
 
 # Return True if the ultrasonic sensor sees an obstacle
@@ -131,15 +133,23 @@ def letsgoback():
 	time.sleep(ReverseTime)
 	StopMotors()
 
-	Right()
-	time.sleep(TurnTime)
+	
+	if GPIO.input(pinLineFollower)!=0:
+		Left()
+		time.sleep(TurnTimeWhite)
+	else:
+		Right()
+		time.sleep(TurnTimeBlack)
 	StopMotors()
 def AvoidObstacle():
 # Back off a little
 # Turn right
 	print("Right")
 	Right()
-	time.sleep(TurnTime)
+	if GPIO.input(pinLineFollower)!=0:
+		time.sleep(TurnTimeWhite)
+	else:
+		time.sleep(TurnTimeBlack)
 	StopMotors()
 try:
 # Set trigger to False (Low)
@@ -148,12 +158,14 @@ try:
 	time.sleep(0.1)
 #repeat the next indented block forever
 	while True:
-		Forwards()
+		if GPIO.input(pinLineFollower)!=0:
+			letsgoback()
+		else:
+			Forwards()
 		time.sleep(0.1)
 		if IsNearObstacle(HowNear):
 			StopMotors()
 			AvoidObstacle()
-		if GPIO.input(pinLineFollower)!=0:
-			letsgoback()
+		
 except KeyboardInterrupt:
 	GPIO.cleanup()
