@@ -4,14 +4,14 @@ pinmap = {
     'motorAB' : 9,
     'motorBF' : 8,
     'motorBB' : 7,
-    
+
     #pin voor de lijn volger
     'lineFollower' : 25,
-    
+
     #pin voor de led lampjes
     'lamp' : 21,
-    
-    #pins voor ultrasonic sensor 
+
+    #pins voor ultrasonic sensor
     'trigger' : 17,
     'echo' : 18
 }
@@ -19,14 +19,15 @@ pinmap = {
 defaultValues = {
     #hoe vaak de pins aan en uit gaan per seconde
     'frequency' : 20,
-    
+    'freqcorrectionBF' : 19,
+
     #hoe lang de pin aan staat op elke cycle als een procent
     'dutyCycleA' : 30,
     'dutyCycleB' : 30,
-    
+
     #stopt de cycle
     'stop' : 0,
-    
+
     'turnTime' : 0.45,
     'reverseTime' : 0.5,
     'minDistance' : 15

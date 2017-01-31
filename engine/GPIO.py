@@ -18,9 +18,10 @@ GPIO.setup(cfg.pinmap['lineFollower'], GPIO.IN)
 GPIO.setup(cfg.pinmap['trigger'], GPIO.OUT)
 GPIO.setup(cfg.pinmap['echo'], GPIO.IN)
 
+#The frequency of power sent by the battery to the specified wheels, frequency is defined in: config>Configuration
 pwmMotorAF = GPIO.PWM(cfg.pinmap['motorAF'], cfg.defaultValues['frequency'])
 pwmMotorAB = GPIO.PWM(cfg.pinmap['motorAB'], cfg.defaultValues['frequency'])
-pwmMotorBF = GPIO.PWM(cfg.pinmap['motorBF'], cfg.defaultValues['frequency'])
+pwmMotorBF = GPIO.PWM(cfg.pinmap['motorBF'], cfg.defaultValues['freqcorrectionAF'])
 pwmMotorBB = GPIO.PWM(cfg.pinmap['motorBB'], cfg.defaultValues['frequency'])
 
 log.logger.info("finalized initializing GPIO")
