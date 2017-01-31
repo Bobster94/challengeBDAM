@@ -39,6 +39,22 @@ def turnRight():
     gp.pwmMotorBB.ChangeDutyCycle(cfg.defaultValues['dutyCycleB'])
     log.logger.info("Started turning right")
 
+def turnRoundBigger():
+    # recht om rondje maken steeds groter- Bobbie
+    for x in xrange(0,50):
+        x + 5
+        gp.pwmMotorAF.ChangeDutyCycle(50)
+        gp.pwmMotorAB.ChangeDutyCycle()
+        gp.pwmMotorBF.ChangeDutyCycle(x)
+        gp.pwmMotorBB.ChangeDutyCycle()
+        if (l.isOverBlack()):
+            x = 51
+        else:
+            log.logger.info("Gaat groter")
+        time.sleep(1)
+
+        log.logger.info("Making a circle")
+
 def avoidObstacle():
 # Turn right
     log.logger.info("Trying to avoid obstacle")

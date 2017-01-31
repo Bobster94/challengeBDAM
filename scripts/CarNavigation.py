@@ -12,10 +12,12 @@ def start():
             else:
                 controls.stopMotors()
                 controls.driveBackward()
-                time.sleep(1)
+                time.sleep(0.5)
                 if(l.seekLine() == False):
                     controls.stopMotors()
                     log.logger.info('the robot has lost the line')
+                    # Bob ingevoegd regel 19 - 20
+                    controls.turnRoundBigger()
                     exit()
                 else:
                     log.logger.info('following the line')
