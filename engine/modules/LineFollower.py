@@ -11,6 +11,13 @@ def isOverBlack():
     else:
         #log.logger.info('The line follow sensor is seeing a white surface')
         return False
+def isOverWhite():
+    if(GPIO.input(cfg.pinmap['lineFollower']) == 0):
+        #log.logger.info('The line follow sensor is seeing a white surface')
+        return False
+    else:
+        #log.logger.info('The line follow sensor is seeing a black surface')
+        return True
 def seekLine():
     log.logger.debug('Seeking line')
     direction = True
