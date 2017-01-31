@@ -22,6 +22,16 @@ def start():
                         i = 1
             else:
                 controls.stopEngine()
+                j = 1
+                while True:
+                    if j = 1:
+                        turnOn()
+                        j = 0
+                        time.sleep(0.5)
+                    else:
+                        turnOff()
+                        j = 1
+                        time.sleep(0.5)
                 
     except KeyboardInterrupt:
         GPIO.clear()
