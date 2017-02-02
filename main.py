@@ -1,15 +1,24 @@
-import engine.DriveControls as controls
-import engine.config.Configuration as cfg
-import engine.GPIO as GPIO
-import time
-import scripts.BrightSpot as spot
+import engine.DriveControls as Controls
+import scripts.LineFollower as LineFollower
+import scripts.FollowObject as FollowObject
+import scripts.BrightSpot as BrightSpot
+print('1 = line follower')
+print('2 = follow object')
+print('3 = brightspot')
+select_script_input = int(input('Select a script:'))
 
-print('1 = BrightSpot')
-choice = input('selecteer een script:')
+Controls.stop_motors()
+
 
 def choose(choice):
-    if(choice == 1):
-        spot.start()
+    if choice == 1:
+        LineFollower.start()
+    elif choice == 2:
+        FollowObject.start()
+    elif choice == 3:
+        BrightSpot.start()
     else:
-        choose(input('dit is geen optie'))
-    
+        choose(int(input('This is not an option!')))
+
+
+choose(select_script_input)

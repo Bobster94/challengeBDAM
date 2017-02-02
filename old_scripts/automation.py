@@ -14,10 +14,10 @@ pinEcho = 18
 pinLineFollower = 25
 pinLamp = 21
 # How many times to turn the pin on and off each second
-Frequency = 75
+Frequency = 50
 # How long the pin stays on each cycle, as a percent
-DutyCycleA = 50
-DutyCycleB = 50
+DutyCycleA = 35
+DutyCycleB = 33
 # Setting the duty cycle to 0 means the motors will not turn
 Stop = 0
 # Set the GPIO Pin mode to be Output

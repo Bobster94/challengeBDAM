@@ -1,49 +1,49 @@
 import RPi.GPIO as GPIO
-import engine.config.Configuration as cfg
+import engine.GPIO as gp
+import engine.config.Configuration as Config
 import util.logger as log
-import engine.DriveControls as controls
+import engine.DriveControls as Controls
 import time
 
-def isOverBlack():
-    if(GPIO.input(cfg.pinmap['lineFollower']) == 0):
-        #log.logger.info('The line follow sensor is seeing a black surface')
+
+def is_over_black():
+    if GPIO.input(Config.pinmap['lineFollower']) == 0:
+        # log.logger.info('The line follow sensor is seeing a black surface')
         return True
     else:
-        #log.logger.info('The line follow sensor is seeing a white surface')
+        # log.logger.info('The line follow sensor is seeing a white surface')
         return False
-def isOverWhite():
-    if(GPIO.input(cfg.pinmap['lineFollower']) == 0):
-        #log.logger.info('The line follow sensor is seeing a white surface')
-        return False
-    else:
-        #log.logger.info('The line follow sensor is seeing a black surface')
-        return True
-def seekLine():
+
+
+def seek_line():
+    Config.defaultValues['dutyCycleA'] = 35
+    Config.defaultValues['dutyCycleB'] = 33
+
     log.logger.debug('Seeking line')
     direction = True
-    
-    seekSize = 0.25
-    seekCount = 1
-    maxSeekCount = 5
-    
-    while(seekCount <= maxSeekCount):
-        
-        seekTime = seekSize * seekCount
-        if(direction):
+
+    seek_size = 0.25
+    seek_count = 1
+    max_seek_count = 5
+
+    while seek_count <= max_seek_count:
+        time.sleep(0.2)
+        seek_time = seek_size * seek_count
+        if direction:
             log.logger.debug('Looking left')
-            controls.turnLeft()
+            Controls.turn_left()
         else:
             log.logger.debug('looking right')
-            controls.turnRight()
-        startTime = time.time()
-        
-        while(time.time()-startTime <= seekTime):
-            if(isOverBlack()):
-                controls.stopMotors()
+            Controls.turn_right()
+        start_time = time.time()
+
+        while time.time() - start_time <= seek_time:
+            if is_over_black():
+                Controls.stop_motors()
                 return True
-        controls.stopMotors()
-        
-        seekCount += 1
-        
+        Controls.stop_motors()
+
+        seek_count += 1
+
         direction = not direction
     return False
