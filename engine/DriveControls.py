@@ -1,61 +1,69 @@
-import engine.config.Configuration as Config
+import engine.config.Configuration as cfg
 import engine.GPIO as gp
 import util.logger as log
 import time
 
-
-def stop_motors():
-    gp.pwmMotorAF.ChangeDutyCycle(Config.defaultValues['stop'])
-    gp.pwmMotorAB.ChangeDutyCycle(Config.defaultValues['stop'])
-    gp.pwmMotorBF.ChangeDutyCycle(Config.defaultValues['stop'])
-    gp.pwmMotorBB.ChangeDutyCycle(Config.defaultValues['stop'])
+def stopMotors():
+    gp.pwmMotorAF.ChangeDutyCycle(cfg.defaultValues['stop'])
+    gp.pwmMotorAB.ChangeDutyCycle(cfg.defaultValues['stop'])
+    gp.pwmMotorBF.ChangeDutyCycle(cfg.defaultValues['stop'])
+    gp.pwmMotorBB.ChangeDutyCycle(cfg.defaultValues['stop'])
     log.logger.info("Stopped motors")
-    #print(Config.defaultValues['dutyCycleA'])
 
-
-def drive_forward():
-    gp.pwmMotorAF.ChangeDutyCycle(Config.defaultValues['dutyCycleA'])
-    gp.pwmMotorAB.ChangeDutyCycle(Config.defaultValues['stop'])
-    gp.pwmMotorBF.ChangeDutyCycle(Config.defaultValues['dutyCycleB'])
-    gp.pwmMotorBB.ChangeDutyCycle(Config.defaultValues['stop'])
+def driveForward():
+    gp.pwmMotorAF.ChangeDutyCycle(cfg.defaultValues['dutyCycleA'])
+    gp.pwmMotorAB.ChangeDutyCycle(cfg.defaultValues['stop'])
+    gp.pwmMotorBF.ChangeDutyCycle(cfg.defaultValues['dutyCycleB'])
+    gp.pwmMotorBB.ChangeDutyCycle(cfg.defaultValues['stop'])
     log.logger.info("Started driving forward")
-    #time.sleep(1)
+    time.sleep(1)
 
-
-def drive_backward():
-    gp.pwmMotorAF.ChangeDutyCycle(Config.defaultValues['stop'])
-    gp.pwmMotorAB.ChangeDutyCycle(Config.defaultValues['dutyCycleA'])
-    gp.pwmMotorBF.ChangeDutyCycle(Config.defaultValues['stop'])
-    gp.pwmMotorBB.ChangeDutyCycle(Config.defaultValues['dutyCycleB'])
+def driveBackward():
+    gp.pwmMotorAF.ChangeDutyCycle(cfg.defaultValues['stop'])
+    gp.pwmMotorAB.ChangeDutyCycle(cfg.defaultValues['dutyCycleA'])
+    gp.pwmMotorBF.ChangeDutyCycle(cfg.defaultValues['stop'])
+    gp.pwmMotorBB.ChangeDutyCycle(cfg.defaultValues['dutyCycleB'])
     log.logger.info("Started driving backward")
 
-
-def turn_left():
-    gp.pwmMotorAF.ChangeDutyCycle(Config.defaultValues['stop'])
-    gp.pwmMotorAB.ChangeDutyCycle(Config.defaultValues['dutyCycleA'])
-    gp.pwmMotorBF.ChangeDutyCycle(Config.defaultValues['dutyCycleB'])
-    gp.pwmMotorBB.ChangeDutyCycle(Config.defaultValues['stop'])
+def turnLeft():
+    gp.pwmMotorAF.ChangeDutyCycle(cfg.defaultValues['dutyCycleC'])
+    gp.pwmMotorAB.ChangeDutyCycle(cfg.defaultValues['stop'])
+    gp.pwmMotorBF.ChangeDutyCycle(cfg.defaultValues['dutyCycleB'])
+    gp.pwmMotorBB.ChangeDutyCycle(cfg.defaultValues['stop'])
     log.logger.info("Started turning left")
 
-
-def turn_right():
-    gp.pwmMotorAF.ChangeDutyCycle(Config.defaultValues['dutyCycleA'])
-    gp.pwmMotorAB.ChangeDutyCycle(Config.defaultValues['stop'])
-    gp.pwmMotorBF.ChangeDutyCycle(Config.defaultValues['stop'])
-    gp.pwmMotorBB.ChangeDutyCycle(Config.defaultValues['dutyCycleB'])
+def turnRight():
+    gp.pwmMotorAF.ChangeDutyCycle(cfg.defaultValues['dutyCycleA'])
+    gp.pwmMotorAB.ChangeDutyCycle(cfg.defaultValues['stop'])
+    gp.pwmMotorBF.ChangeDutyCycle(cfg.defaultValues['dutyCycleD'])
+    gp.pwmMotorBB.ChangeDutyCycle(cfg.defaultValues['stop'])
     log.logger.info("Started turning right")
 
+def turnRoundBigger():
+    # recht om rondje maken steeds groter- Bobbie
+    for x in xrange(0,50):
+        x + 5
+        gp.pwmMotorAF.ChangeDutyCycle(50)
+        gp.pwmMotorAB.ChangeDutyCycle(cfg.defaultValues['stop'])
+        gp.pwmMotorBF.ChangeDutyCycle(x)
+        gp.pwmMotorBB.ChangeDutyCycle(cfg.defaultValues['stop'])
+        if (l.isOverBlack()):
+            x = 51
+        else:
+            log.logger.info("Gaat groter")
+        time.sleep(1)
 
-def avoid_obstacle():
-    # Turn right
+        log.logger.info("Making a circle")
+
+def avoidObstacle():
+# Turn right
     log.logger.info("Trying to avoid obstacle")
-    turn_right()
-    time.sleep(Config.defaultValues['turnTime'])
-    stop_motors()
+    turnRight()
+    time.sleep(cfg.defaultValues['turnTime'])
+    stopMotors()
 
-
-def stop_engine():
+def stopEngine():
     log.logger.info("Stopping engine")
-    stop_motors()
+    stopMotors()
     gp.clear()
     log.logger.info("Stopped engine")

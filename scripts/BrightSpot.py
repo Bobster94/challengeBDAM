@@ -12,7 +12,7 @@ def start():
         while True:
             if not l.is_over_black():
                 controls.drive_forward()
-                if sensor.is_near_obstacle(10):
+                if sensor.is_near_obstacle(15):
                     controls.stop_motors()
                     if i == 1:
                         controls.turn_right()

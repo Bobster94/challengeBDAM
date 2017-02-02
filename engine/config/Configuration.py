@@ -24,6 +24,9 @@ defaultValues = {
     'dutyCycleA': 55,#43
     'dutyCycleB': 58,#52
 
+    'dutyCycleC': 25,
+    'dutyCycleD': 28,
+
     # stopt de cycle
     'stop': 0,
 
