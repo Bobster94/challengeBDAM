@@ -1,18 +1,27 @@
-import engine.DriveControls as controls
-import engine.config.Configuration as cfg
-import RPi.GPIO as GPIO
-import engine.modules.UltrasonicSensor as ultra
-import time
-try:
-    GPIO.output(cfg.pinmap['trigger'], False)
-    time.sleep(0.1)
-    controls.stopMotors()
-    controls.driveForward()
-    while True:
-        
-        time.sleep(1)
-        #if (ultra.IsNearObstacle(cfg.defaultValues['minDistance'])):
-        #    controls.stopMotors()
-        #    controls.avoidObstacle()
-except KeyboardInterrupt:
-    controls.stopEngine()
+import engine.DriveControls as Controls
+import scripts.LineFollower as LineFollower
+import scripts.CarChase as CarChase
+import scripts.BrightSpot as BrightSpot
+import scripts.GoogleCar as GoogleCar
+print('1 = line follower')
+print('2 = follow object')
+print('3 = brightspot')
+select_script_input = int(input('Select a script:'))
+
+Controls.stop_motors()
+#
+
+def choose(choice):
+    if choice == 1:
+        LineFollower.start()
+    elif choice == 2:
+        CarChase.start()
+    elif choice == 3:
+        BrightSpot.start()
+    elif choice == 4:
+        GoogleCar.start()
+    else:
+        choose(int(input('This is not an option!')))
+
+
+choose(select_script_input)

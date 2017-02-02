@@ -1,7 +1,11 @@
 import RPi.GPIO as GPIO
-import engine.config.Configuration as cfg
+import engine.config.Configuration as Config
 
-def turnOn():
-    GPIO.output(cfg.pinmap['lamp'], GPIO.HIGH)
-def turnOff():
-    GPIO.output(cfg.pinmap['lamp'], GPIO.LOW)
+
+def turn_on():
+    GPIO.output(Config.pinmap['lamp1'], GPIO.HIGH)
+    GPIO.output(Config.pinmap['lamp2'], GPIO.HIGH)
+
+def turn_off():
+    GPIO.output(Config.pinmap['lamp1'], GPIO.LOW)
+    GPIO.output(Config.pinmap['lamp2'], GPIO.LOW)
