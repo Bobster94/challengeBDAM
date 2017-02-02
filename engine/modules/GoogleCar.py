@@ -4,21 +4,23 @@ import util.logger as log
 import engine.config.Configuration as Config
 import engine.GPIO as GPIO
 import time
+import random
+
 
 def start():
-    	if time.sleep(cfg.defaultValues[random.randint2(1, 5)])
-            controls.stopMotors()
-            log.logger.info("Trying to avoid obstacle")
-    		turnRight()
-    		time.sleep(random.randint3(1, 5))
-    		stopMotors()
-		.drive_forward()
+    while True:
+    	if time.sleep(random.randint2(1, 5)):
+    		GoogleCar.newdirection()
+    	if (ultra.IsNearObstacle(cfg.defaultValues['minDistance'])):
+        	GoogleCar.newdirection()
     	
-    	while (ultra.IsNearObstacle(cfg.defaultValues['minDistance'])):
-            controls.stopMotors()
+    	
+
+def newdirection():
+		while (ultra.IsNearObstacle(cfg.defaultValues['minDistance'])):
+            Controls.stopMotors()
             log.logger.info("choosing a new direction")
-    		turnRight()
-			random.randint(1, 5)
+    		Controls.turnRight()
     		time.sleep(random.randint4(1, 5))
-    		stopMotors()
-		controls.drive_forward()
+    		Controls.stopMotors()
+		Controls.drive_forward()
