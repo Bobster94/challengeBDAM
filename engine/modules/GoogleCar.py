@@ -9,10 +9,11 @@ import random
 
 def start():
     while True:
+    	distance = Sensor.measure()
     	if time.sleep(random.randint2(1, 5)):
     		GoogleCar.newdirection()
-    	if (ultra.IsNearObstacle(cfg.defaultValues['minDistance'])):
         	GoogleCar.newdirection()
+        else:Controls.drive_forward():
     	
     	
 
