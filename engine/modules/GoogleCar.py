@@ -9,19 +9,18 @@ import random
 
 def start():
     while True:
-    	distance = Sensor.measure()
-    	if time.sleep(random.randint2(1, 5)):
-    		GoogleCar.newdirection()
-        	GoogleCar.newdirection()
-        else:Controls.drive_forward():
-    	
-    	
+        distance = Sensor.measure()
+        time.sleep(random.randint(1, 5))
+        newdirection()
+        newdirection()
+        Controls.drive_forward()
+
 
 def newdirection():
-		while (ultra.IsNearObstacle(cfg.defaultValues['minDistance'])):
-            Controls.stopMotors()
-            log.logger.info("choosing a new direction")
-    		Controls.turnRight()
-    		time.sleep(random.randint4(1, 5))
-    		Controls.stopMotors()
-		Controls.drive_forward()
+    while (Sensor.measure() <= 10):
+        Controls.stop_motors()
+        log.logger.info("choosing a new direction")
+        Controls.turn_right()
+        time.sleep(random.randint(1, 5))
+        Controls.stop_motors()
+        Controls.drive_forward()
