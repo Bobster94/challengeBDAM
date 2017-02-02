@@ -11,13 +11,15 @@ pinMotorBBackwards = 7
 # Define GPIO pins to use on the Pi
 pinTrigger = 17
 pinEcho = 18
-pinLineFollower = 25
+lightsensor = 25
 pinLamp = 21
 # How many times to turn the pin on and off each second
-Frequency = 75
+Frequency = 50
 # How long the pin stays on each cycle, as a percent
-DutyCycleA = 50
-DutyCycleB = 50
+DutyCyclestraightlineA = 100
+DutyCyclestraightlineB = 100
+DutyCyclesturnA = 30
+DutyCyclesturnB = 50
 # Setting the duty cycle to 0 means the motors will not turn
 Stop = 0
 # Set the GPIO Pin mode to be Output
@@ -26,17 +28,16 @@ GPIO.setup(pinMotorABackwards, GPIO.OUT)
 GPIO.setup(pinMotorBForwards, GPIO.OUT)
 GPIO.setup(pinMotorBBackwards, GPIO.OUT)
 GPIO.setup(pinLamp, GPIO.OUT)
-GPIO.setup(pinLineFollower, GPIO.IN)
+GPIO.setup(lightsensor, GPIO.IN)
 
 # Set pins as output and input
 GPIO.setup(pinTrigger, GPIO.OUT) # Trigger
 GPIO.setup(pinEcho, GPIO.IN) # Echo
 
 # Distance Variables
-HowNear = 25
-ReverseTime = 0.4
+HowNear = 20
+# ReverseTime = 0.4
 TurnTimeBlack = 0.16
-TurnTimeWhite = 0.2
 # Set the GPIO to software PWM at 'Frequency' Hertz
 pwmMotorAForwards = GPIO.PWM(pinMotorAForwards, Frequency)
 pwmMotorABackwards = GPIO.PWM(pinMotorABackwards, Frequency)
@@ -55,10 +56,16 @@ def StopMotors():
 	pwmMotorBForwards.ChangeDutyCycle(Stop)
 	pwmMotorBBackwards.ChangeDutyCycle(Stop)
 # Turn both motors forwards
-def Forwards():
-	pwmMotorAForwards.ChangeDutyCycle(DutyCycleA)
+def Forwardsstraightline():
+	pwmMotorAForwards.ChangeDutyCycle(DutyCyclestraightlineA)
 	pwmMotorABackwards.ChangeDutyCycle(Stop)
-	pwmMotorBForwards.ChangeDutyCycle(DutyCycleB)
+	pwmMotorBForwards.ChangeDutyCycle(DutyCyclestraightlineB)
+	pwmMotorBBackwards.ChangeDutyCycle(Stop)
+
+def Forwardsstraightturn():
+	pwmMotorAForwards.ChangeDutyCycle(DutyCyclesturnA)
+	pwmMotorABackwards.ChangeDutyCycle(Stop)
+	pwmMotorBForwards.ChangeDutyCycle(DutyCyclesturnB)
 	pwmMotorBBackwards.ChangeDutyCycle(Stop)
 # Turn both motors backwards
 def Backwards():
@@ -120,33 +127,33 @@ def IsNearObstacle(localHowNear):
 		return True
 	else:
 		return False
-	
-# Move back a little, then turn right
-def letsgoback():
-	GPIO.output(pinLamp, GPIO.HIGH)
-	time.sleep(0.2)
-	GPIO.output(pinLamp, GPIO.LOW)
-	GPIO.output(pinLamp, GPIO.HIGH)
-	time.sleep(0.2)
-	GPIO.output(pinLamp, GPIO.LOW)
-	Backwards()
-	time.sleep(ReverseTime)
-	StopMotors()
 
-	
-	if GPIO.input(pinLineFollower)!=0:
-		Left()
-		time.sleep(TurnTimeWhite)
-	else:
-		Right()
-		time.sleep(TurnTimeBlack)
-	StopMotors()
+# Move back a little, then turn right
+# def letsgoback():
+	# GPIO.output(pinLamp, GPIO.HIGH)
+	# time.sleep(0.2)
+	# GPIO.output(pinLamp, GPIO.LOW)
+	# GPIO.output(pinLamp, GPIO.HIGH)
+	# time.sleep(0.2)
+	# GPIO.output(pinLamp, GPIO.LOW)
+	# Backwards()
+	# time.sleep(ReverseTime)
+	# StopMotors()
+
+
+	# if GPIO.input(lightsensor)!=0:
+	# 	Left()
+	# 	time.sleep(TurnTimeWhite)
+	# else:
+	# 	Right()
+	# 	time.sleep(TurnTimeBlack)
+	# StopMotors()
 def AvoidObstacle():
 # Back off a little
 # Turn right
 	print("Right")
 	Right()
-	if GPIO.input(pinLineFollower)!=0:
+	if GPIO.input(lightsensor)!=0:
 		time.sleep(TurnTimeWhite)
 	else:
 		time.sleep(TurnTimeBlack)
@@ -158,14 +165,9 @@ try:
 	time.sleep(0.1)
 #repeat the next indented block forever
 	while True:
-		if GPIO.input(pinLineFollower)!=0:
-			letsgoback()
-		else:
-			Forwards()
-		time.sleep(0.1)
 		if IsNearObstacle(HowNear):
 			StopMotors()
 			AvoidObstacle()
-		
+
 except KeyboardInterrupt:
 	GPIO.cleanup()
