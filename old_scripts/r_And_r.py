@@ -37,7 +37,7 @@ GPIO.setup(pinEcho, GPIO.IN) # Echo
 # Distance Variables
 HowNear = 20
 # ReverseTime = 0.4
-TurnTimeBlack = 0.16
+# TurnTimeBlack = 0.16
 # Set the GPIO to software PWM at 'Frequency' Hertz
 pwmMotorAForwards = GPIO.PWM(pinMotorAForwards, Frequency)
 pwmMotorABackwards = GPIO.PWM(pinMotorABackwards, Frequency)
@@ -68,33 +68,33 @@ def Forwardsstraightturn():
 	pwmMotorBForwards.ChangeDutyCycle(DutyCyclesturnB)
 	pwmMotorBBackwards.ChangeDutyCycle(Stop)
 # Turn both motors backwards
-def Backwards():
-	pwmMotorAForwards.ChangeDutyCycle(Stop)
-	pwmMotorABackwards.ChangeDutyCycle(DutyCycleA)
-	pwmMotorBForwards.ChangeDutyCycle(Stop)
-	pwmMotorBBackwards.ChangeDutyCycle(DutyCycleB)
+# def Backwards():
+# 	pwmMotorAForwards.ChangeDutyCycle(Stop)
+# 	pwmMotorABackwards.ChangeDutyCycle(DutyCycleA)
+# 	pwmMotorBForwards.ChangeDutyCycle(Stop)
+# 	pwmMotorBBackwards.ChangeDutyCycle(DutyCycleB)
 # Turn left
-def Left():
-	pwmMotorAForwards.ChangeDutyCycle(Stop)
-	pwmMotorABackwards.ChangeDutyCycle(DutyCycleA)
-	pwmMotorBForwards.ChangeDutyCycle(DutyCycleB)
-	pwmMotorBBackwards.ChangeDutyCycle(Stop)
+# def Left():
+# 	pwmMotorAForwards.ChangeDutyCycle(Stop)
+# 	pwmMotorABackwards.ChangeDutyCycle(DutyCycleA)
+# 	pwmMotorBForwards.ChangeDutyCycle(DutyCycleB)
+# 	pwmMotorBBackwards.ChangeDutyCycle(Stop)
 # Turn Right
-def Right():
-	pwmMotorAForwards.ChangeDutyCycle(DutyCycleA)
-	pwmMotorABackwards.ChangeDutyCycle(Stop)
-	pwmMotorBForwards.ChangeDutyCycle(Stop)
-	pwmMotorBBackwards.ChangeDutyCycle(DutyCycleB)
+# def Right():
+# 	pwmMotorAForwards.ChangeDutyCycle(DutyCycleA)
+# 	pwmMotorABackwards.ChangeDutyCycle(Stop)
+# 	pwmMotorBForwards.ChangeDutyCycle(Stop)
+# 	pwmMotorBBackwards.ChangeDutyCycle(DutyCycleB)
 
 
 # Return True if the ultrasonic sensor sees an obstacle
-def IsNearObstacle(localHowNear):
-	Distance = Measure()
-	print("IsNearObstacle: "+str(Distance))
-	if Distance < localHowNear:
-		return True
-	else:
-		return False
+# def IsNearObstacle(localHowNear):
+# 	Distance = Measure()
+# 	print("IsNearObstacle: "+str(Distance))
+# 	if Distance < localHowNear:
+# 		return True
+# 	else:
+# 		return False
 # Take a distance measurement
 def Measure():
 	GPIO.output(pinTrigger, True)
@@ -120,13 +120,13 @@ def Measure():
 	return Distance
 
 # Return True if the ultrasonic sensor sees an obstacle
-def IsNearObstacle(localHowNear):
+def Turnfound(HowNear):
 	Distance = Measure()
 	print("IsNearObstacle: "+str(Distance))
-	if Distance < localHowNear:
-		return True
+	if Distance < HowNear:
+		Forwardsstraightturn()
 	else:
-		return False
+		Forwardsstraightline()
 
 # Move back a little, then turn right
 # def letsgoback():
@@ -148,26 +148,26 @@ def IsNearObstacle(localHowNear):
 	# 	Right()
 	# 	time.sleep(TurnTimeBlack)
 	# StopMotors()
-def AvoidObstacle():
-# Back off a little
-# Turn right
-	print("Right")
-	Right()
-	if GPIO.input(lightsensor)!=0:
-		time.sleep(TurnTimeWhite)
-	else:
-		time.sleep(TurnTimeBlack)
-	StopMotors()
-try:
-# Set trigger to False (Low)
-	GPIO.output(pinTrigger, False)
-# Allow module to settle
-	time.sleep(0.1)
-#repeat the next indented block forever
-	while True:
-		if IsNearObstacle(HowNear):
-			StopMotors()
-			AvoidObstacle()
+# def AvoidObstacle():
+# # Back off a little
+# # Turn right
+# 	print("Right")
+# 	Forwardsstraightturn()
+# 	if GPIO.input(lightsensor)!=0:
+# 		time.sleep(TurnTimeWhite)
+# 	else:
+# 		time.sleep(TurnTimeBlack)
+# 	StopMotors()
+# try:
+# # Set trigger to False (Low)
+# 	GPIO.output(pinTrigger, False)
+# # Allow module to settle
+# 	time.sleep(0.1)
+# #repeat the next indented block forever
+# 	while True:
+# 		if IsNearObstacle(HowNear):
+# 			StopMotors()
+# 			AvoidObstacle()
 
 except KeyboardInterrupt:
 	GPIO.cleanup()
