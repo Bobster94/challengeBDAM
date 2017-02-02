@@ -2,10 +2,11 @@ import engine.DriveControls as Controls
 import scripts.LineFollower as LineFollower
 import scripts.CarChase as CarChase
 import scripts.BrightSpot as BrightSpot
-import scripts.GoogleCar as GoogleCar
+import scripts.GoogleCar2 as GoogleCar
 print('1 = line follower')
 print('2 = follow object')
 print('3 = brightspot')
+print('4 = google')
 select_script_input = int(input('Select a script:'))
 
 Controls.stop_motors()

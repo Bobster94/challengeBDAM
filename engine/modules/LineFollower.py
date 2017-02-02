@@ -7,11 +7,12 @@ import time
 
 
 def is_over_black():
+    time.sleep(0.01)
     if GPIO.input(Config.pinmap['lineFollower']) == 0:
-        # log.logger.info('The line follow sensor is seeing a black surface')
+        log.logger.info('The line follow sensor is seeing a black surface')
         return True
     else:
-        # log.logger.info('The line follow sensor is seeing a white surface')
+        log.logger.info('The line follow sensor is seeing a white surface')
         return False
 
 

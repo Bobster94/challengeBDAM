@@ -22,8 +22,8 @@ defaultValues = {
     'frequency': 100,
 
     # hoe lang de pin aan staat op elke cycle als een procent
-    'dutyCycleA': 28,#43
-    'dutyCycleB': 26,#52
+    'dutyCycleA': 46,#43 #28
+    'dutyCycleB': 47,#52 #26
 
     # stopt de cycle
     'stop': 0,
